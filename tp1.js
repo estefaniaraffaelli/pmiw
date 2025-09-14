@@ -1,5 +1,9 @@
 
-/*PMIW - COMISION 2*/
+/*
+PMIW - COMISION 2
+https://youtu.be/3HWNxLCAqi4
+*/
+
 
 let img;
 let cantidadAnillos = 14;
@@ -142,3 +146,4 @@ function reiniciar() {
     cambiarColores = false;
 
 }
+
