@@ -140,4 +140,5 @@ function reiniciar() {
     ejeY = 200;
     escala = 1.0;
     cambiarColores = false;
+
 }
