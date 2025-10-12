@@ -3,7 +3,7 @@
 /*DIAGRAMA*/
 /*https://miro.com/welcomeonboard/RnlRak5DNzhsVFA2U3EveTZiZUJEazRYRTNJYnZXSWIyME8zeTdFYnNyMC9LUHZweWV4Uk9SakFlYUJkWXdjNngrVkFhMVVnRm1UbGI5Wm1XRFo5QXp6dDFONFJzR2lQcGdoNElRYm51Q0RQRTI3ZDJIYTBUcTU4MVZZdzAzK29NakdSWkpBejJWRjJhRnhhb1UwcS9BPT0hdjE=?share_link_id=689241050362*/
 /*VIDEO*/
-/*INSERTAR VIDEO*/
+/* https://youtu.be/ev4GKJS25zw?si=Yt2zHxv7TMws-DNX */
 
 let marco;
 let textos = [];
