@@ -5,12 +5,15 @@
 /*VIDEO*/
 /* https://youtu.be/ev4GKJS25zw?si=Yt2zHxv7TMws-DNX */
 
-let marco;
-let textos = [];
 let pantallaActual = 0;
 let imagen = [];
 let fuente;
-let tiempoInicio;
+let fuenteTitulos;
+let ventanaX = 450;
+let ventanaY = 60;
+let ventanaW = 180;
+let ventanaH = 300;
+let tiempoInicio = 0;
 let cantidadDeCirculos = 800;
 let tiempoFinal = 0;
 let tiempoIntroCreditos = 0;
@@ -19,26 +22,23 @@ let intro;
 let ruiditoz;
 let cancionCreditos;
 
-let rangos = [
-    [], [], [0, 2], [4, 5], [7, 8], [10, 11], [13, 16], [18, 19], [21, 22], [24, 26], [28, 29], [31, 32], [34, 37], [39, 40], [42, 45], [47, 50], [52, 53], [55, 56], [58, 59], [61, 63], [65, 67], [69, 71], [73, 78], [80, 81], [83, 84], [86, 87], [89, 90], [92, 96], [98, 100], [102, 104], [106, 109], [111, 114], [116, 120], []
-];
 
-let titulos = ["Present day...\npresent time...", "", "", "EL MENSAJE", "CARTA DIGITAL", "FORO DE RUMORES", "LA LUZ", "RASTRO DIGITAL",
-    "PRIMER INGRESO AL WIRED", "CONTACTO SENSORIAL", "RUTA LENTA", "ENCUENTRO CON CHISA",
-    "PASAJE ERRANTE", "INTERFERENCIA EN CASA", "SUEÑO LUCIDO", "FORO SECRETO DE LOS KNIGHTS",
-    "VOCES CONTRADICTORIAS", "SIMBOLOS EN EL MUNDO REAL", "INVESTIGACION FISICA",
-    "CAMINO DE EXPANSION", "NODO PROHIBIDO", "CAMINO CRITICO", "EIRI, EL ARQUITECTO",
+let titulos = ["Present day...     \npresent time...", "", "", "EL MENSAJE", "CARTA DIGITAL", "FORO DE RUMORES", "LA LUZ", "RASTRO DIGITAL",
+    "PRIMER INGRESO \nAL WIRED", "CONTACTO SENSORIAL", "RUTA LENTA", "ENCUENTRO CON CHISA",
+    "PASAJE ERRANTE", "INTERFERENCIA EN CASA", "SUEÑO LUCIDO", "FORO SECRETO \nDE LOS KNIGHTS",
+    "VOCES \nCONTRADICTORIAS", "SIMBOLOS EN EL \nMUNDO REAL", "INVESTIGACION FISICA",
+    "CAMINO DE EXPANSION", "NODO PROHIBIDO", "CAMINO CRITICO", "EIRI, \nEL ARQUITECTO",
     "EL DOBLE", "RETIRO INSEGURO", "FUSION", "RESISTENCIA FINAL",
     "FINAL DIVINIDAD", "FINAL HUMANO", "FINAL NADA",
-    "EPILOGO SER TODOS", "EPILOGO SER ALGUIEN", "EPILOGO NO SER", ""];
+    "EPILOGO \nSER TODOS", "EPILOGO \nSER ALGUIEN", "EPILOGO \nNO SER", ""];
 
 function preload() {
-    textos = loadStrings("assets/textoz.txt");
     fuente = loadFont("assets/coderscrux.ttf");
+    fuenteTitulos = loadFont("assets/gunship.ttf");
+
     intro = loadSound("assets/sonido/intro.mp3");
     ruiditoz = loadSound("assets/sonido/ruiditoz.mp3");
     cancionCreditos = loadSound("assets/sonido/megalomaniac.mp3");
-    marco = loadImage("assets/imagenez/marco.png");
 
     imagen[2] = loadImage("assets/imagenez/pantalla0.png");
     imagen[3] = loadImage("assets/imagenez/pantalla1.png");
@@ -75,7 +75,7 @@ function preload() {
 
 function setup() {
     createCanvas(640, 480);
-    tiempoInicio = millis();
+    noSmooth();
     ruiditoz.setLoop(true);
 }
 
@@ -83,7 +83,7 @@ function draw() {
     background(0);
 
     if (imagen[pantallaActual]) {
-        image(imagen[pantallaActual], 0, 0, width, height);
+        image(imagen[pantallaActual], 0, 50, width, height);
     }
 
     textFont(fuente);
@@ -91,7 +91,8 @@ function draw() {
     fill(0);
 
     if (pantallaActual != 0 && pantallaActual != 1 && pantallaActual != 2 && pantallaActual != 33) {
-        image(marco, 0, 0, 640, 480);
+        image(imagen[pantallaActual], 0, 0, 440, 430);
+        menuBar();
     }
     if (pantallaActual == 1) {
         introCreditos();
@@ -118,29 +119,39 @@ function ruidoBlanco() {
             ellipse(x, y, tamaño);
         }
 
+        if (tiempoInicio == 0) {
+            tiempoInicio = millis();
+        }
         if (millis() - tiempoInicio > 5500) {
             pantallaActual = 1;
+            tiempoInicio = 0;
         }
     }
 }
 
 function mostrarTitulos(pantalla) {
     let titulo = titulos[pantalla];
-
+    fill(255);
 
     if (pantalla == 0) {
+        fill(255);
+        textAlign(CENTER, CENTER);
         textSize(20);
         text("*Play audio*", width / 2, 400);
+
         textSize(80);
         let count = frameCount / 10 % (titulo.length);
         let textoActual = titulo.slice(0, count);
+        let leadingActual = textLeading();
+        textLeading(75);
         text(textoActual, width / 2, height / 2);
+        textLeading(leadingActual);
 
     } else {
-        textSize(18);
+        textFont(fuenteTitulos);
+        textSize(10);
         textAlign(CENTER, CENTER);
-        text(titulo, width / 2, 24);
-
+        text(titulo, width / 2 + 220, 40);
     }
 }
 
@@ -150,16 +161,43 @@ function introCreditos() {
     textSize(20);
     textAlign(CENTER, CENTER);
 
-    
-    text("Trabajo realizado por:\n" + "Zoe Orellano y Estefania Raffaelli.\n" + "\n" + "Comision 2.\n" + "\n" + "Docente:\n" + "Matias Jauregui Lorda.\n" + "\n" + "Agradecimiento especial:\n" + "A Diego :)\n", width / 2, height / 2);
-    if (tiempoIntroCreditos == 0) { /*si tiempo creditos no fue llamado empieza a contar el millis desde aca */
-                tiempoIntroCreditos = millis();
+
+    text("Trabajo realizado por:\n" + "Zoe Orellano y Estefania Raffaelli.\n" + "\n" + "Comision 2.\n" + "\n" + "Docente:\n" + "Matias Jauregui Lorda.\n", width / 2, height / 2);
+    if (tiempoIntroCreditos == 0) {
         tiempoIntroCreditos = millis();
     }
-    if (millis() - tiempoIntroCreditos > 5000) { 
+    if (millis() - tiempoIntroCreditos > 5000) {
         pantallaActual = 2;
         tiempoIntroCreditos = 0;
     }
+}
+
+function menuBar() {
+    let menuBarH = 20;
+
+    fill(0);
+    stroke(255);
+    rect(0, 0, width, menuBarH);
+
+    fill(255);
+    noStroke();
+    textAlign(LEFT, CENTER);
+    text("File", 10, menuBarH / 2);
+    text("Edit", 50, menuBarH / 2);
+    text("Commands", 95, menuBarH / 2);
+    text("The Wired", 160, menuBarH / 2);
+
+    textAlign(LEFT, TOP);
+
+    let textPanelW = 200;
+    let textPanelX = width - textPanelW;
+    fill(0);
+    stroke(255);
+    rect(textPanelX, menuBarH, textPanelW, height - menuBarH);
+
+    fill(0);
+    stroke(255);
+    rect(ventanaX, ventanaY, ventanaW, ventanaH);
 }
 
 function creditosFinales() {
@@ -198,33 +236,157 @@ function creditosFinales() {
     }
 }
 
-
 function mostrarTextoEnPantalla(pantalla) {
-    let rangoDeTextos = rangos[pantalla];
-    let x = 29;
-    let y = 399;
-    let alturaDeLinea = 12;
-    let anchoMaximo = width - 29 * 2;
-
+    let x = 460;
+    let y = 50;
+    let alturaDeLinea = 15;
+    fill(255);
+    noStroke();
     textAlign(LEFT, TOP);
+    textSize(16);
+    textLeading(alturaDeLinea);
 
-    if (pantalla == 0) {
-        fill(255);
-        textAlign(CENTER, CENTER);
-    }
-    if (pantalla == 2) {
-        fill(255);
+    let padding = 20;
+    if (pantallaActual == 2) {
         textAlign(CENTER, TOP);
         y = 50;
+        x = width / 2;
+    } else if (pantallaActual >= 3 && pantallaActual < 33) {
+        let panelTextoX = 450;
+        let menuBarH = 20;
+        x = panelTextoX + padding;
+        y = menuBarH + 70;
+        textAlign(LEFT, TOP);
     }
 
-    for (let i = rangoDeTextos[0]; i <= rangoDeTextos[1]; i++) {
-        if (textos[i]) {
-            text(textos[i], x, y, anchoMaximo, alturaDeLinea);
-            y += alturaDeLinea;
-        }
+    if (pantalla == 2) {
+        let textoPantalla2 = "¡Bienvenido al Wired!\nUna red que respira detrás de la realidad.\n\n¿Te atreves a entrar?";
+        text(textoPantalla2, x, y);
+    }
+    if (pantalla == 3) {
+        let textoPantalla3 = "Nueva notificación.\nRemitente: Chisa Yomoda.\n\nMurió la semana pasada…\npero su nombre parpadea\nen mi bandeja.";
+        text(textoPantalla3, x, y);
+    }
+    if (pantalla == 4) {
+        let textoPantalla4 = "El correo se despliega:\n- No estoy muerta.\nMe mudé al Wired. Vení. -\n\nLas letras laten como\nun corazón.";
+        text(textoPantalla4, x, y);
+    }
+    if (pantalla == 5) {
+        let textoPantalla5 = "Usuarios anónimos comentan \nel suicidio de Chisa.\nUno escribe:\n- Ella sigue conectada. -";
+        text(textoPantalla5, x, y);
+    }
+    if (pantalla == 6) {
+        let textoPantalla6 = "La pantalla se ilumina\ncomo un sol artificial.\nSiento que la gravedad\nme arrastra hacia dentro.\n\n¿Estoy sola?\nNadie más parece\nsentir esto… nadie\npuede saber lo que\npasa aquí.";
+        text(textoPantalla6, x, y);
+    }
+    if (pantalla == 7) {
+        let textoPantalla7 = "El rastreo señala\nun nodo oculto\nen la red.\nCoordenadas imposibles:\nningún lugar.";
+        text(textoPantalla7, x, y);
+    }
+    if (pantalla == 8) {
+        let textoPantalla8 = "El aire es electricidad.\nUna voz familiar:\n- No tengas miedo. Vení. -";
+        text(textoPantalla8, x, y);
+    }
+    if (pantalla == 9) {
+        let textoPantalla9 = "Mi mano traspasa la luz.\nPor un instante siento\nmi cuerpo duplicado,\nmitad carne, mitad dato.";
+        text(textoPantalla9, x, y);
+    }
+    if (pantalla == 10) {
+        let textoPantalla10 = "Apago la computadora,\npero algo vibra\nen el aire.\nIncluso desconectada,\nel Wired me sigue.";
+        text(textoPantalla10, x, y);
+    }
+    if (pantalla == 11) {
+        let textoPantalla11 = "Chisa:\n- Esto es más real que\nlo que llaman realidad.\nAcá nadie muere. -";
+        text(textoPantalla11, x, y);
+    }
+    if (pantalla == 12) {
+        let textoPantalla12 = "Estoy en Cyberia,\nel club donde el Wired\nlate detrás de cada\nparlante.\nEntre luces\nestroboscópicas cruzo\npasillos de datos\nproyectados en las\nparedes. Avatares me\nmiran sin rostro.";
+        text(textoPantalla12, x, y);
+    }
+    if (pantalla == 13) {
+        let textoPantalla13 = "El cuarto parece normal,\npero las paredes respiran.\nMi teléfono vibra\nsin mensajes.";
+        text(textoPantalla13, x, y);
+    }
+    if (pantalla == 14) {
+        let textoPantalla14 = "Duermo, pero sigo\nconectada.\nCódigos flotan en mi\nmente.\n\nSi grito, ¿alguien me\nescuchará?\nO estoy atrapada en\neste mundo,\ncompletamente sola?";
+        text(textoPantalla14, x, y);
+    }
+    if (pantalla == 15) {
+        let textoPantalla15 = "En una terminal\nescondida al fondo\nde Cyberia,\nun chat cifrado se abre.\nHackers hablan de Eiri,\nun hombre que\n*se cree Dios del Wired*.";
+        text(textoPantalla15, x, y);
+    }
+    if (pantalla == 16) {
+        let textoPantalla16 = "Los avatares discuten:\nUnos prometen libertad,\notros advierten de la\npérdida del yo.";
+        text(textoPantalla16, x, y);
+    }
+    if (pantalla == 17) {
+        let textoPantalla17 = "En la escuela, una\nespiral luminosa\npalpita en el pasillo.\nNadie la ve,\nexcepto yo.";
+        text(textoPantalla17, x, y);
+    }
+    if (pantalla == 18) {
+        let textoPantalla18 = "Analizo los símbolos\nen mi cuaderno.\nCada trazo parece\nun mapa hacia\notro plano.";
+        text(textoPantalla18, x, y);
+    }
+    if (pantalla == 19) {
+        let textoPantalla19 = "Los Knights revelan\na Eiri, un hombre que\ndigitalizó su conciencia.\n- Podés ser como\nnosotros. -";
+        text(textoPantalla19, x, y);
+    }
+    if (pantalla == 20) {
+        let textoPantalla20 = "Accedo a un archivo\noculto.\nImágenes de mi propia\nhabitación, grabadas\ndesde dentro.";
+        text(textoPantalla20, x, y);
+    }
+    if (pantalla == 21) {
+        let textoPantalla21 = "Un usuario anónimo\nme envía un mensaje:\n- El Wired no es un lugar,\nes una idea. Pero toda\nidea consume. -";
+        text(textoPantalla21, x, y);
+    }
+    if (pantalla == 22) {
+        let textoPantalla22 = "Eiri aparece rodeado\nde código:\n- Tu conciencia es solo\nsoftware, Lain.\nEl cuerpo es el hardware\nque lo ejecuta,\npero no es necesario.\nSi el programa puede\ncorrer en la red,\n¿para qué aferrarse\na la carne?";
+        text(textoPantalla22, x, y);
+    }
+    if (pantalla == 23) {
+        let textoPantalla23 = "Una segunda yo\nme observa desde\nel otro lado de la\npantalla. Su sonrisa\nes idéntica a la mía.";
+        text(textoPantalla23, x, y);
+    }
+    if (pantalla == 24) {
+        let textoPantalla24 = "Intento alejarme,\npero el Wired filtra\nsusurros en cada\naparato encendido.";
+        text(textoPantalla24, x, y);
+    }
+    if (pantalla == 25) {
+        let textoPantalla25 = "El Wired late al ritmo\nde mi mente.\nLa frontera entre yo\ny el todo se disuelve.";
+        text(textoPantalla25, x, y);
+    }
+    if (pantalla == 26) {
+        let textoPantalla26 = "Siento el tirón del\ninfinito, pero recuerdo\nmi cuerpo.\nMi yo digital grita\npor existir.";
+        text(textoPantalla26, x, y);
+    }
+
+    if (pantalla == 27) {
+        let textoPantalla27 = "Las fronteras se\ndisuelven.\nLas voces de todos\nlos seres laten en\nmi mente hasta que\nninguna es distinta\nde la mía.\nNo hay yo, solo un\nmurmullo infinito.\nSer todos.";
+        text(textoPantalla27, x, y);
+    }
+    if (pantalla == 28) {
+        let textoPantalla28 = "Respiro el aire pesado\ndel mundo físico.\nSiento el frío, el dolor,\nla soledad… y elijo\nquedarme.\nAunque duela, elijo\nser alguien.";
+        text(textoPantalla28, x, y);
+    }
+    if (pantalla == 29) {
+        let textoPantalla29 = "Apago cada conexión,\ncada latido.\nNi carne, ni dato,\nni memoria.\nSolo la quietud\nabsoluta: no ser.";
+        text(textoPantalla29, x, y);
+    }
+    if (pantalla == 30) {
+        let textoPantalla30 = "La red respira a través\nde cada hilo de\npensamiento.\nNo hay principio ni\nfinal, solo un pulso\ncontinuo.\nEn cada risa,\nen cada llanto,\nen cada recuerdo humano,\nlate mi conciencia\ndisuelta.";
+        text(textoPantalla30, x, y);
+    }
+    if (pantalla == 31) {
+        let textoPantalla31 = "El amanecer rompe\nel cielo en fragmentos\ngrises.\nCamino entre cuerpos\nque nunca sabrán\nquién fui,\npero cada paso\nconfirma una verdad:\nexistir duele…\ny sin embargo, sigo.";
+        text(textoPantalla31, x, y);
+    }
+    if (pantalla == 32) {
+        let textoPantalla32 = "Silencio.\nNingún dato,\nningún latido.\nNi Wired ni mundo.\nSolo la calma perfecta\nde la nada,\ndonde incluso el recuerdo\nde haber elegido\nse desvanece.";
+        text(textoPantalla32, x, y);
     }
 }
+
+
 
 function dibujarBoton(x, y, textos) {
     let paddingX = 10;
@@ -241,22 +403,25 @@ function dibujarBoton(x, y, textos) {
     let hover = mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
 
     if (hover) {
-        fill(80);
+        fill(255);
+        stroke(0);
         cursor(HAND);
         push();
         translate(x + w / 2, y + h / 2);
-        scale(1.1);
         rectMode(CENTER);
-        rect(0, 0, w, h, 10);
-        fill(255);
+        rect(0, 0, w, h);
+        noStroke();
+        fill(0);
         textAlign(CENTER, CENTER);
         text(textos, 0, 0);
         pop();
     } else {
-        fill(255);
-        cursor(ARROW);
-        rect(x, y, w, h, 10);
         fill(0);
+        stroke(255);
+        cursor(ARROW);
+        rect(x, y, w, h);
+        noStroke();
+        fill(255);
         textAlign(CENTER, CENTER);
         text(textos, x + w / 2, y + h / 2);
     }
@@ -268,108 +433,108 @@ function dibujarBoton(x, y, textos) {
 function decisiones() {
 
     if (pantallaActual == 2) {
-        dibujarBoton(285, 100, "Comenzar");
+        dibujarBoton(285, 120, "Comenzar");
     }
     if (pantallaActual == 3) {/*PANTALLA 1: EL MENSAJE*/
-        dibujarBoton(510, 400, "Abrir mensaje");
-        dibujarBoton(500, 430, "Buscar en foros");
+        dibujarBoton(450, 400, "Abrir mensaje");
+        dibujarBoton(450, 430, "Buscar en foros");
 
     }
     if (pantallaActual == 4) {/*PANTALLA 2A: CARTA DIGITAL*/
-        dibujarBoton(518, 400, "¿Dónde estas?");
-        dibujarBoton(530, 430, "Rastrear IP");
+        dibujarBoton(450, 400, "¿Dónde estas?");
+        dibujarBoton(450, 430, "Rastrear IP");
 
     }
     if (pantallaActual == 5) { /*PANTALLA 2B: FORO DE RUMORES*/
-        dibujarBoton(485, 400, "Contactar al usuario");
-        dibujarBoton(500, 430, "Descargar archivo");
+        dibujarBoton(450, 400, "Contactar al usuario");
+        dibujarBoton(450, 430, "Descargar archivo");
 
     }
     if (pantallaActual == 6) { /*PANTALLA 3A: LA LUZ*/
-        dibujarBoton(500, 400, "Dejarme absorber");
-        dibujarBoton(516, 430, "Sentir la luz");
+        dibujarBoton(450, 400, "Dejarme absorber");
+        dibujarBoton(450, 430, "Sentir la luz");
 
     } if (pantallaActual == 7) { /*PANTALLA 3B: RASTRO DIGITAL*/
-        dibujarBoton(510, 400, "Abrir nodo");
-        dibujarBoton(460, 430, "Guardar información");
+        dibujarBoton(450, 400, "Abrir nodo");
+        dibujarBoton(450, 430, "Guardar información");
 
     } if (pantallaActual == 8) { /*PANTALLA 4A: PRIMER INGRESO AL WIRED*/
         dibujarBoton(450, 400, "Seguir la voz de Chisa");
-        dibujarBoton(400, 430, "Caminar hacia una luz distante");
+        dibujarBoton(450, 430, "Ir hacia una luz distante");
 
     } if (pantallaActual == 9) { /*PANTALLA 4B: CONTACTO SENSORIAL*/
-        dibujarBoton(480, 400, "Entrar completamente");
-        dibujarBoton(400, 430, "Retirar la mano y volver al cuarto");
+        dibujarBoton(450, 400, "Entrar completamente");
+        dibujarBoton(450, 430, "Retirar la mano");
 
     } if (pantallaActual == 10) { /*PANTALLA 4C: RUTA LENTA*/
-        dibujarBoton(450, 400, "Anotar el nodo para después");
-        dibujarBoton(380, 430, "Dormir y dejar que me invada en sueños");
+        dibujarBoton(450, 400, "Anotar el nodo");
+        dibujarBoton(450, 430, "Que invada en sueños");
 
     } if (pantallaActual == 11) { /*PANTALLA 5A: ENCUENTRO CON CHISA*/
-        dibujarBoton(465, 400, "Creerle y avanzar");
-        dibujarBoton(410, 430, "Pedir pruebas, cuestionarla");
+        dibujarBoton(450, 400, "Creerle y avanzar");
+        dibujarBoton(450, 430, "Pedir pruebas");
 
     } if (pantallaActual == 12) { /*PANTALLA 5B: PASAJE ERRANTE*/
-        dibujarBoton(420, 400, "Seguir a un avatar brillante");
-        dibujarBoton(490, 430, "Buscar una salida");
+        dibujarBoton(450, 400, "Seguir a un avatar");
+        dibujarBoton(450, 430, "Buscar una salida");
 
     } if (pantallaActual == 13) { /*PANTALLA 5C: INTERFERENCIA EN CASA*/
-        dibujarBoton(480, 400, "Revisar el teléfono");
-        dibujarBoton(350, 430, "Anotar los símbolos para anotarlos después");
+        dibujarBoton(450, 400, "Revisar el teléfono");
+        dibujarBoton(450, 430, "Anotar los símbolos");
 
     } if (pantallaActual == 14) { /*PANTALLA 5D: SUEÑO LÚCIDO*/
         dibujarBoton(450, 400, "Seguir los códigos");
-        dibujarBoton(470, 430, "Romper el sueño");
+        dibujarBoton(450, 430, "Romper el sueño");
 
     } if (pantallaActual == 15) { /*PANTALLA 6A: FORO SECRETO DE LOS KNIGHTS*/
-        dibujarBoton(470, 400, "Preguntar por Eiri");
-        dibujarBoton(360, 430, "Solicitar acceso a su servidor oculto");
+        dibujarBoton(450, 400, "Preguntar por Eiri");
+        dibujarBoton(450, 430, "Acceder a servidor oculto");
 
     } if (pantallaActual == 16) { /*PANTALLA 6B: VOCES CONTRADICTORIAS*/
-        dibujarBoton(370, 400, "Seguir a los que prometen libertad");
-        dibujarBoton(370, 430, "Seguir a los que advierten peligro");
+        dibujarBoton(450, 400, "Libertad");
+        dibujarBoton(450, 430, "Peligro");
 
     } if (pantallaActual == 17) { /*PANTALLA 6C: SÍMBOLOS EN EL MUNDO REAL*/
-        dibujarBoton(550, 400, "Tocarla");
-        dibujarBoton(395, 430, "Dibujarla para investigarla después");
+        dibujarBoton(450, 400, "Tocarla");
+        dibujarBoton(450, 430, "Investigarla después");
 
     } if (pantallaActual == 18) { /*PANTALLA 6D: INVESTIGACIÓN FÍSICA*/
-        dibujarBoton(430, 400, "Reconstruir el patrón");
-        dibujarBoton(400, 430, "Intentar romper el cuaderno");
+        dibujarBoton(450, 400, "Reconstruir el patrón");
+        dibujarBoton(450, 430, "Romper el cuaderno");
 
     } if (pantallaActual == 19) { /*PANTALLA 7A: CAMINO DE EXPANSIÓN*/
         dibujarBoton(450, 400, "Aceptar la invitación");
-        dibujarBoton(445, 430, "Exigir saber el precio");
+        dibujarBoton(450, 430, "Exigir saber el precio");
 
     } if (pantallaActual == 20) { /*PANTALLA 7B: NODO PROHIBIDO*/
-        dibujarBoton(400, 400, "Investigar la cámara invisible");
+        dibujarBoton(450, 400, "Investigar la cámara");
         dibujarBoton(450, 430, "Cerrar todo y respirar");
 
     } if (pantallaActual == 21) { /*PANTALLA 7C: CAMINO CRÍTICO*/
-        dibujarBoton(520, 400, "Responderle");
-        dibujarBoton(400, 430, "Silenciarlo y buscar más pruebas");
+        dibujarBoton(450, 400, "Responderle");
+        dibujarBoton(450, 430, "Silenciarlo y buscar pruebas");
 
     } if (pantallaActual == 22) { /*PANTALLA 8A: EIRI, EL ARQUITECTO*/
-        dibujarBoton(490, 400, "Aceptar su visión");
-        dibujarBoton(530, 430, "Desafiarlo");
+        dibujarBoton(450, 400, "Aceptar su visión");
+        dibujarBoton(450, 430, "Desafiarlo");
 
     } if (pantallaActual == 23) { /*PANTALLA 8B: EL DOBLE*/
-        dibujarBoton(430, 400, "Aceptar que ella soy yo");
-        dibujarBoton(460, 430, "Negarla con fuerza");
+        dibujarBoton(450, 400, "Aceptar que soy yo");
+        dibujarBoton(450, 430, "Negarla con fuerza");
 
     } if (pantallaActual == 24) { /*PANTALLA 8C: RETIRO INSEGURO*/
-        dibujarBoton(400, 400, "Desconectar todos los dispositivos");
-        dibujarBoton(420, 430, "Seguir las voces una última vez");
+        dibujarBoton(450, 400, "Desconectar dispositivos");
+        dibujarBoton(450, 430, "Seguir las voces");
 
     } if (pantallaActual == 25) { /*PANTALLA 9A: FUSIÓN*/
-        dibujarBoton(415, 390, "Fundirme con todas las voces");
-        dibujarBoton(400, 415, "Quedarme en el mundo que duele");
-        dibujarBoton(455, 440, "Borrarme para siempre");
+        dibujarBoton(450, 390, "Fundirme con todos");
+        dibujarBoton(450, 415, "Elijo el mundo que duele");
+        dibujarBoton(450, 440, "Borrarme para siempre");
 
     } if (pantallaActual == 26) { /*PANTALLA 9B: RESISTENCIA FINAL*/
-        dibujarBoton(500, 390, "Ser todos");
-        dibujarBoton(490, 415, "Ser alguien");
-        dibujarBoton(510, 440, "No ser");
+        dibujarBoton(450, 390, "Ser todos");
+        dibujarBoton(450, 415, "Ser alguien");
+        dibujarBoton(450, 440, "No ser");
 
     } if (pantallaActual == 27) { /*PANTALLA 10A: FINAL DIVINIDAD*/
         if (tiempoFinal == 0) {
@@ -398,16 +563,16 @@ function decisiones() {
             tiempoFinal = 0
         }
     } if (pantallaActual == 30) { /*PANTALLA 11A: EPÍLOGO SER TODOS*/
-        dibujarBoton(500, 400, "Ver Creditos");
+        dibujarBoton(450, 400, "Ver Creditos");
 
     }
     if (pantallaActual == 31) { /*PANTALLA 11B: EPÍLOGO SER ALGUIEN*/
-        dibujarBoton(500, 400, "Ver Creditos");
+        dibujarBoton(450, 400, "Ver Creditos");
 
 
     }
     if (pantallaActual == 32) { /*PANTALLA 10C: EPÍLOGO NO SER*/
-        dibujarBoton(500, 400, "Ver Creditos");
+        dibujarBoton(450, 400, "Ver Creditos");
     }
 }
 
@@ -415,6 +580,8 @@ function botonClick(x, y, texto) {
 
     let paddingX = 10;
     let paddingY = 5;
+    textFont(fuente);
+    textSize(16);
     let w = textWidth(texto) + paddingX * 2;
     let h = textAscent() + textDescent() + paddingY * 2;
 
@@ -433,7 +600,7 @@ function mousePressed() {
 
 
     if (pantallaActual == 2) {
-        if (botonClick(285, 100, "Comenzar")) { // "Comenzar" -> EL MENSAJE
+        if (botonClick(285, 120, "Comenzar")) { // "Comenzar" -> EL MENSAJE
             pantallaActual = 3;
 
             if (ruiditoz.isPlaying()) {
@@ -447,11 +614,11 @@ function mousePressed() {
 
     // PANTALLA 1: EL MENSAJE (3)
     if (pantallaActual == 3) {
-        if (botonClick(510, 400, "Abrir mensaje")) { // "Abrir mensaje" -> 2A
+        if (botonClick(450, 400, "Abrir mensaje")) { // "Abrir mensaje" -> 2A
             pantallaActual = 4;
             return;
         }
-        if (botonClick(500, 430, 150, 50)) { // "Buscar en foros" -> 2B
+        if (botonClick(450, 430, "Buscar en foros")) { // "Buscar en foros" -> 2B
             pantallaActual = 5;
             return;
         }
@@ -459,11 +626,11 @@ function mousePressed() {
 
     // PANTALLA 2A: CARTA DIGITAL (4)
     if (pantallaActual == 4) {
-        if (botonClick(518, 400, "¿Dónde estás?")) { // "¿Dónde estás?" -> 3A (La Luz)
+        if (botonClick(450, 400, "¿Dónde estás?")) { // "¿Dónde estás?" -> 3A (La Luz)
             pantallaActual = 6;
             return;
         }
-        if (botonClick(530, 430, "Rastrear IP")) { // "Rastrear IP" -> 3B (Rastro Digital)
+        if (botonClick(450, 430, "Rastrear IP")) { // "Rastrear IP" -> 3B (Rastro Digital)
             pantallaActual = 7;
             return;
         }
@@ -471,11 +638,11 @@ function mousePressed() {
 
     // PANTALLA 2B: FORO DE RUMORES (5)
     if (pantallaActual == 5) {
-        if (botonClick(485, 400, "Contactar al usuario")) { // "Contactar al usuario" -> 3B
+        if (botonClick(450, 400, "Contactar al usuario")) { // "Contactar al usuario" -> 3B
             pantallaActual = 7;
             return;
         }
-        if (botonClick(487, 430, "Descargar archivo")) { // "Descargar archivo" -> 3A
+        if (botonClick(450, 430, "Descargar archivo")) { // "Descargar archivo" -> 3A
             pantallaActual = 6;
             return;
         }
@@ -483,11 +650,11 @@ function mousePressed() {
 
     // PANTALLA 3A: LA LUZ (6)
     if (pantallaActual == 6) {
-        if (botonClick(500, 400, "Dejarme absorber")) { // "Dejarme absorber" -> 4A
+        if (botonClick(450, 400, "Dejarme absorber")) { // "Dejarme absorber" -> 4A
             pantallaActual = 8;
             return;
         }
-        if (botonClick(516, 430, "Sentir la luz")) { //  -> 4B
+        if (botonClick(450, 430, "Sentir la luz")) { //  -> 4B
             pantallaActual = 9;
             return;
         }
@@ -495,11 +662,11 @@ function mousePressed() {
 
     // PANTALLA 3B: RASTRO DIGITAL (7)
     if (pantallaActual == 7) {
-        if (botonClick(510, 400, "Abrir nodo")) { // "Abrir nodo" -> 4A
+        if (botonClick(450, 400, "Abrir nodo")) { // "Abrir nodo" -> 4A
             pantallaActual = 8;
             return;
         }
-        if (botonClick(460, 430, "Guardar información")) { // "Guardar información" -> 4C
+        if (botonClick(450, 430, "Guardar información")) { // "Guardar información" -> 4C
             pantallaActual = 10;
             return;
         }
@@ -511,7 +678,7 @@ function mousePressed() {
             pantallaActual = 11;
             return;
         }
-        if (botonClick(400, 430, "Caminar hacia una luz distante")) { // "Caminar hacia una luz distante" -> 5B
+        if (botonClick(450, 430, "Ir hacia una luz distante")) { // "Caminar hacia una luz distante" -> 5B
             pantallaActual = 12;
             return;
         }
@@ -519,11 +686,11 @@ function mousePressed() {
 
     // PANTALLA 4B: CONTACTO SENSORIAL (9)
     if (pantallaActual == 9) {
-        if (botonClick(480, 400, "Entrar completamente")) { // "Entrar completamente" -> 5A
+        if (botonClick(450, 400, "Entrar completamente")) { // "Entrar completamente" -> 5A
             pantallaActual = 11;
             return;
         }
-        if (botonClick(400, 430, "Retirar la mano y volver al cuarto")) { // "Retirar la mano..." -> 5C
+        if (botonClick(450, 430, "Retirar la mano")) { // "Retirar la mano..." -> 5C
             pantallaActual = 13;
             return;
         }
@@ -531,11 +698,11 @@ function mousePressed() {
 
     // PANTALLA 4C: RUTA LENTA (10)
     if (pantallaActual == 10) {
-        if (botonClick(450, 400, "Anotar el nodo para después")) { // "Anotar el nodo..." -> 5C
+        if (botonClick(450, 400, "Anotar el nodo")) { // "Anotar el nodo..." -> 5C
             pantallaActual = 13;
             return;
         }
-        if (botonClick(380, 430, "Dormir y dejar que me invada en sueños")) { // "Dormir..." -> 5D
+        if (botonClick(450, 430, "Que me invada en sueños")) { // "Dormir..." -> 5D
             pantallaActual = 14;
             return;
         }
@@ -543,11 +710,11 @@ function mousePressed() {
 
     // PANTALLA 5A: ENCUENTRO CON CHISA (11)
     if (pantallaActual == 11) {
-        if (botonClick(465, 400, "Creerle y avanzar")) { // "Creerle y avanzar" -> 6A
+        if (botonClick(450, 400, "Creerle y avanzar")) { // "Creerle y avanzar" -> 6A
             pantallaActual = 15;
             return;
         }
-        if (botonClick(410, 430, "Pedir pruebas, cuestionarla")) { // "Pedir pruebas..." -> 6B
+        if (botonClick(450, 430, "Pedir pruebas")) { // "Pedir pruebas..." -> 6B
             pantallaActual = 16;
             return;
         }
@@ -555,11 +722,11 @@ function mousePressed() {
 
     // PANTALLA 5B: PASAJE ERRANTE (12)
     if (pantallaActual == 12) {
-        if (botonClick(420, 400, "Seguir a un avatar brillante")) { // "Seguir a un avatar brillante" -> 6B
+        if (botonClick(450, 400, "Seguir a un avatar")) { // "Seguir a un avatar brillante" -> 6B
             pantallaActual = 16;
             return;
         }
-        if (botonClick(490, 430, "Buscar una salida")) { // "Buscar una salida" -> 6C
+        if (botonClick(450, 430, "Buscar una salida")) { // "Buscar una salida" -> 6C
             pantallaActual = 17;
             return;
         }
@@ -567,11 +734,11 @@ function mousePressed() {
 
     // PANTALLA 5C: INTERFERENCIA EN CASA (13)
     if (pantallaActual == 13) {
-        if (botonClick(480, 400, "Revisar el teléfono")) { // "Revisar el teléfono" -> 6C
+        if (botonClick(450, 400, "Revisar el teléfono")) { // "Revisar el teléfono" -> 6C
             pantallaActual = 17;
             return;
         }
-        if (botonClick(350, 430, "Anotar los símbolos para anotarlos después")) { // "Anotar los símbolos..." -> 6D
+        if (botonClick(450, 430, "Anotar los símbolos")) { // "Anotar los símbolos..." -> 6D
             pantallaActual = 18;
             return;
         }
@@ -583,7 +750,7 @@ function mousePressed() {
             pantallaActual = 15;
             return;
         }
-        if (botonClick(470, 430, "Romper el sueño")) { // "Romper el sueño" -> 6C
+        if (botonClick(450, 430, "Romper el sueño")) { // "Romper el sueño" -> 6C
             pantallaActual = 17;
             return;
         }
@@ -591,11 +758,11 @@ function mousePressed() {
 
     // PANTALLA 6A: FORO SECRETO DE LOS KNIGHTS (15)
     if (pantallaActual == 15) {
-        if (botonClick(470, 400, "Preguntar por Eiri")) { // "Preguntar por Eiri" -> 7A
+        if (botonClick(450, 400, "Preguntar por Eiri")) { // "Preguntar por Eiri" -> 7A
             pantallaActual = 19;
             return;
         }
-        if (botonClick(360, 430, "Solicitar acceso a su servidor oculto")) { // "Solicitar acceso..." -> 7B
+        if (botonClick(450, 430, "Acceder a  servidor oculto")) { // "Solicitar acceso..." -> 7B
             pantallaActual = 20;
             return;
         }
@@ -603,11 +770,11 @@ function mousePressed() {
 
     // PANTALLA 6B: VOCES CONTRADICTORIAS (16)
     if (pantallaActual == 16) {
-        if (botonClick(370, 400, "Seguir a los que prometen libertad")) { // "Seguir a los que prometen libertad" -> 7A
+        if (botonClick(450, 400, "Libertad")) { // "Seguir a los que prometen libertad" -> 7A
             pantallaActual = 19;
             return;
         }
-        if (botonClick(370, 430, "Seguir a los que advierten peligro")) { // "Seguir a los que advierten peligro" -> 7C
+        if (botonClick(450, 430, "Peligro")) { // "Seguir a los que advierten peligro" -> 7C
             pantallaActual = 21;
             return;
         }
@@ -615,11 +782,11 @@ function mousePressed() {
 
     // PANTALLA 6C: SÍMBOLOS EN EL MUNDO REAL (17)
     if (pantallaActual == 17) {
-        if (botonClick(550, 400, "Tocarla")) { // "Tocarla" -> 7B
+        if (botonClick(450, 400, "Tocarla")) { // "Tocarla" -> 7B
             pantallaActual = 20;
             return;
         }
-        if (botonClick(395, 430, "Dibujarla para investigarla después")) { // "Dibujarla..." -> 7C
+        if (botonClick(450, 430, "Investigarla después")) { // "Dibujarla..." -> 7C
             pantallaActual = 21;
             return;
         }
@@ -627,11 +794,11 @@ function mousePressed() {
 
     // PANTALLA 6D: INVESTIGACIÓN FÍSICA (18)
     if (pantallaActual == 18) {
-        if (botonClick(430, 400, "Reconstruir el patrón")) { // "Reconstruir el patrón" -> 7C
+        if (botonClick(450, 400, "Reconstruir el patrón")) { // "Reconstruir el patrón" -> 7C
             pantallaActual = 21;
             return;
         }
-        if (botonClick(400, 430, "Intentar romper el cuaderno")) { // "Intentar romper el cuaderno" -> 7B
+        if (botonClick(450, 430, "Romper el cuaderno")) { // "Intentar romper el cuaderno" -> 7B
             pantallaActual = 20;
             return;
         }
@@ -643,7 +810,7 @@ function mousePressed() {
             pantallaActual = 22;
             return;
         }
-        if (botonClick(445, 430, "Exigir saber el precio")) { // "Exigir saber el precio" -> 8B
+        if (botonClick(450, 430, "Exigir saber el precio")) { // "Exigir saber el precio" -> 8B
             pantallaActual = 23;
             return;
         }
@@ -651,7 +818,7 @@ function mousePressed() {
 
     // PANTALLA 7B: NODO PROHIBIDO (20)
     if (pantallaActual == 20) {
-        if (botonClick(400, 400, "Investigar la cámara invisible")) { // "Investigar la cámara invisible" -> 8B
+        if (botonClick(450, 400, "Investigar la cámara")) { // "Investigar la cámara invisible" -> 8B
             pantallaActual = 23;
             return;
         }
@@ -663,11 +830,11 @@ function mousePressed() {
 
     // PANTALLA 7C: CAMINO CRÍTICO (21)
     if (pantallaActual == 21) {
-        if (botonClick(520, 400, "Responderle")) { // "Responderle" -> 8B
+        if (botonClick(450, 400, "Responderle")) { // "Responderle" -> 8B
             pantallaActual = 23;
             return;
         }
-        if (botonClick(400, 430, "Silenciarlo y buscar más pruebas")) { // "Silenciarlo..." -> 8C
+        if (botonClick(450, 430, "Buscar pruebas")) { // "Silenciarlo..." -> 8C
             pantallaActual = 24;
             return;
         }
@@ -675,11 +842,11 @@ function mousePressed() {
 
     // PANTALLA 8A: EIRI, EL ARQUITECTO (22)
     if (pantallaActual == 22) {
-        if (botonClick(490, 400, "Aceptar su visión")) { // "Aceptar su visión" -> 9A
+        if (botonClick(450, 400, "Aceptar su visión")) { // "Aceptar su visión" -> 9A
             pantallaActual = 25;
             return;
         }
-        if (botonClick(530, 430, "Desafiarlo")) { // "Desafiarlo" -> 9B
+        if (botonClick(450, 430, "Desafiarlo")) { // "Desafiarlo" -> 9B
             pantallaActual = 26;
             return;
         }
@@ -687,11 +854,11 @@ function mousePressed() {
 
     // PANTALLA 8B: EL DOBLE (23)
     if (pantallaActual == 23) {
-        if (botonClick(430, 400, "Aceptar que ella soy yo")) { // "Aceptar que ella soy yo" -> 9A
+        if (botonClick(450, 400, "Aceptar que soy yo")) { // "Aceptar que ella soy yo" -> 9A
             pantallaActual = 25;
             return;
         }
-        if (botonClick(460, 430, "Negarla con fuerza")) { // "Negarla con fuerza" -> 9B
+        if (botonClick(450, 430, "Negarla con fuerza")) { // "Negarla con fuerza" -> 9B
             pantallaActual = 26;
             return;
         }
@@ -699,11 +866,11 @@ function mousePressed() {
 
     // PANTALLA 8C: RETIRO INSEGURO (24)
     if (pantallaActual == 24) {
-        if (botonClick(400, 400, "Desconectar todos los dispositivos")) { // "Desconectar todos los dispositivos" -> 9B
+        if (botonClick(450, 400, "Desconectar dispositivos")) { // "Desconectar todos los dispositivos" -> 9B
             pantallaActual = 26;
             return;
         }
-        if (botonClick(420, 430, "Seguir las voces una última vez")) { // "Seguir las voces una última vez" -> 9A
+        if (botonClick(450, 430, "Seguir las voces")) { // "Seguir las voces una última vez" -> 9A
             pantallaActual = 25;
             return;
         }
@@ -711,15 +878,15 @@ function mousePressed() {
 
     // PANTALLA 9A: FUSIÓN (25)
     if (pantallaActual == 25) {
-        if (botonClick(415, 390, "Fundirme con todas las voces")) { // "Fundirme con todas las voces" -> Final Divinidad
+        if (botonClick(450, 390, "Fundirme con todos")) { // "Fundirme con todas las voces" -> Final Divinidad
             pantallaActual = 27;
             return;
         }
-        if (botonClick(400, 415, "Quedarme en el mundo que duele")) { // "Quedarme en el mundo que duele" -> Final Humano
+        if (botonClick(450, 415, "Elijo el mundo que duele")) { // "Quedarme en el mundo que duele" -> Final Humano
             pantallaActual = 28;
             return;
         }
-        if (botonClick(455, 440, "Borrarme para siempre")) { // "Borrarme para siempre" -> Final Nada
+        if (botonClick(450, 440, "Borrarme para siempre")) { // "Borrarme para siempre" -> Final Nada
             pantallaActual = 29;
             return;
         }
@@ -727,21 +894,21 @@ function mousePressed() {
 
     // PANTALLA 26: RESISTENCIA FINAL
     if (pantallaActual == 26) {
-        if (botonClick(500, 390, "Ser todos")) { // "Ser todos" -> Final Divinidad
+        if (botonClick(450, 390, "Ser todos")) { // "Ser todos" -> Final Divinidad
             pantallaActual = 27;
             return;
         }
-        if (botonClick(480, 415, "Ser alguien")) { // "Ser alguien" -> Final Humano
+        if (botonClick(450, 415, "Ser alguien")) { // "Ser alguien" -> Final Humano
             pantallaActual = 28;
             return;
         }
-        if (botonClick(510, 440, "No ser")) { // "No ser" -> Final Nada
+        if (botonClick(450, 440, "No ser")) { // "No ser" -> Final Nada
             pantallaActual = 29;
             return;
         }
     }
     if (pantallaActual == 30) {
-        if (botonClick(500, 400, "Ver Creditos")) { // "Ver Creditos"
+        if (botonClick(450, 400, "Ver Creditos")) { // "Ver Creditos"
             pantallaActual = 33;
 
             if (ruiditoz.isPlaying()) {
@@ -755,7 +922,7 @@ function mousePressed() {
         }
     }
     if (pantallaActual == 31) {
-        if (botonClick(500, 400, "Ver Creditos")) { // "Creditos"
+        if (botonClick(450, 400, "Ver Creditos")) { // "Creditos"
             pantallaActual = 33;
 
             if (ruiditoz.isPlaying()) {
@@ -771,7 +938,7 @@ function mousePressed() {
     }
 
     if (pantallaActual == 32) {
-        if (botonClick(500, 400, "Ver Creditos")) { // "Creditos"
+        if (botonClick(450, 400, "Ver Creditos")) { // "Creditos"
             pantallaActual = 33;
 
             if (ruiditoz.isPlaying()) {
