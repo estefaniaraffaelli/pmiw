@@ -1,6 +1,8 @@
 //video https://youtu.be/IS2L-R9Bx8Q //
 
 let imgLain, imgGlitch, imgData, imgFondo;
+let imgLogo1, imgLogo2, imgLogo3, imgLogo4; 
+let imgFondoGana, imgFondoPierde;  
 let fuente, sonido;
 let juego;
 
